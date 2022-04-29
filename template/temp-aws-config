@@ -1,0 +1,7 @@
+[{{ vars.iam.dev.profile }}]
+region = cn-northwest-1
+output = json
+
+[{{ vars.iam.ops.profile }}]
+region = cn-northwest-1
+output = json

@@ -1,0 +1,15 @@
+[local]
+macos-desktop     ansible_host=127.0.0.1 
+
+[local:vars]
+ansible_ssh_user=shenlan
+ansible_ssh_pass="3460572"
+
+[aws-vpn-gateway]
+aws-vpn-gateway        ansible_host={{ vars.vpn_gw_ip }} ansible_ssh_user=ubuntu
+
+[ali-vpn-gateway]
+ali-vpn-gateway        ansible_host=8.130.97.92 ansible_ssh_user=root
+
+[all:vars]
+ansible_ssh_private_key_file=~/.ssh/id_rsa

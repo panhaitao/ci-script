@@ -1,0 +1,48 @@
+- hosts: master
+  user: root
+  become: yes
+  gather_facts: yes
+  tasks:
+    - include_role:
+        name: k8s-external-dns 
+      vars:
+        master_group: master
+        RepoName: stable
+        RepoURL: https://artifact.onwalk.net/chartrepo/k8s 
+        EdnsChartName: stable/external-dns
+        EdnsChartVersion: 6.1.5
+        ClusterContext: "kubernetes-admin@kubernetes"
+        ClusterDomain: "cluster.local"
+        regionId: rg-acfm2akhd255pgi
+        accessKeyId: "{{ vars.ram_dns_access_key }}"
+        accessKeySecret: "{{ vars.ram_dns_secret_key }}"
+    - include_role:
+        name: k8s-ingress-nginx 
+      vars:
+        master_group: master
+        RepoName: stable
+        RepoURL: https://artifact.onwalk.net/chartrepo/k8s 
+        ClusterContext: "kubernetes-admin@kubernetes"
+        ClusterDomain: "cluster.local"
+        IngressNginxNamespace: ingress
+        IngressNginxName: nginx
+        IngressNginxChart: "stable/ingress-nginx"
+        IngressNginxChartVersion: 4.0.17
+        IngressNginxRepository: artifact.onwalk.net
+        external_ips:
+          - {{ vars.ingress_ip1 }} 
+          - {{ vars.ingress_ip2 }} 
+          - {{ vars.ingress_ip2 }} 
+    - include_role:
+        name: k8s-csi-longhornio 
+      vars:
+        master_group: master
+        RepoName: stable
+        RepoURL: 'https://artifact.onwalk.net/chartrepo/k8s'
+        ClusterContext: "kubernetes-admin@kubernetes"
+        ClusterDomain: "cluster.local"
+        Name: csi-longhorn
+        ChartName: stable/longhorn
+        ChartVersion: 1.2.3
+        Namespace: longhorn-system
+        master_group: master

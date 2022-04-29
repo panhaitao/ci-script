@@ -1,0 +1,12 @@
+[master]
+controller          ansible_host={{ vars.controller1_ip }}
+
+[node]
+worker-1            ansible_host={{ vars.worker1_ip }}
+worker-2            ansible_host={{ vars.worker2_ip }}
+worker-3            ansible_host={{ vars.worker3_i }}
+
+[all:vars]
+ansible_ssh_user=ubuntu
+ansible_ssh_pass=""
+ansible_ssh_private_key_file=~/.ssh/id_rsa

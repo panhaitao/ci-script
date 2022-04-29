@@ -1,0 +1,62 @@
+- name: Set all of k8s cluster nodes
+  hosts: all
+  user: root
+  become: yes
+  gather_facts: no
+  tasks:
+    - include_role:
+        name: k8s-cluster-node-init
+      vars:
+        group: all
+        sandbox_image: "artifact.onwalk.net/k8s/pause:3.6"
+        nameserver:
+          - 127.0.0.53
+        extra_resolv_config:
+          - "options edns0"
+          - "search cn-north-1.compute.internal"
+- name: Set k8s cluster master nodes
+  hosts: master
+  user: root
+  become: yes
+  gather_facts: yes
+  tasks:
+    - include_role:
+        name: k8s-cluster
+      vars:
+        group: all
+        registry: artifact.onwalk.net/k8s
+        k8s_version: v1.23.3
+        cluster_domain: 'cluster.local' 
+        registry: artifact.onwalk.net/k8s
+        apiserver: {{ vars.apiserver }}
+        svc_net: 192.168.0.0/20
+        pod_net: 172.16.0.0/16
+- name: Add k8s cluster workers
+  hosts: all
+  user: root
+  become: yes
+  gather_facts: yes
+  tasks:
+    - include_role:
+        name: k8s-cluster-add-worker
+      vars:
+        master_group: master
+        worker_group: node
+- name: Set k8s cluster master nodes
+  hosts: all
+  user: root
+  become: yes
+  gather_facts: yes
+  tasks:
+    - include_role:
+        name: k8s-cni-cilium
+      vars:
+        master_group: master
+        RepoName: stable
+        RepoURL: 'https://artifact.onwalk.net/chartrepo/k8s'
+        ClusterContext: 'kubernetes-admin@kubernetes'
+        Name: cilium
+        ChartName: stable/cilium
+        ChartVersion: 1.11.2
+        Namespace: kube-system
+        apiserver: {{ vars.apiserver }}

@@ -1,0 +1,15 @@
+vpc:
+  aws-bj: "10.0.0.0/16"
+  aws-hk: "10.1.0.0/16"
+  ali-wlcb: "10.2.0.0/16"
+
+region:
+  aws-hk: ap-east-1
+  aws-bj: cn-north-1
+
+token:
+  aws-sgc:
+    access_key: "{{ vars.access_key }}"
+    secret_key: "{{ vars.secret_key }}"
+
+   
